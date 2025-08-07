@@ -1,11 +1,17 @@
-import React from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
-    <div>
-      <>Hello Main app</>
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
