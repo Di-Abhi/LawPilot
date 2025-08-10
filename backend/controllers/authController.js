@@ -12,6 +12,15 @@ const authController = {
   // MANUAL REGISTER
   register: async (req, res) => {
     try {
+      // Check for validation errors
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ 
+          message: 'Validation failed', 
+          errors: errors.array() 
+        });
+      }
+
       const { name, email, password, role } = req.body;
 
       const existingUser = await Users.findOne({ email });
@@ -25,7 +34,7 @@ const authController = {
         name,
         email,
         password: hashedPassword,
-        role,
+        role: role || 'client', // Default role if not specified
       });
 
       await user.save();
@@ -39,6 +48,15 @@ const authController = {
   // MANUAL LOGIN
   login: async (req, res) => {
     try {
+      // Check for validation errors
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ 
+          message: 'Validation failed', 
+          errors: errors.array() 
+        });
+      }
+
       const { email, password } = req.body;
 
       const user = await Users.findOne({ email });
@@ -57,10 +75,21 @@ const authController = {
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
       const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET, { expiresIn: '7d' });
 
-      res.cookie('jwtToken', token, { httpOnly: true, secure: true, domain: 'localhost', path: '/' });
-      res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, domain: 'localhost', path: '/' });
+      const isProduction = process.env.NODE_ENV === 'production';
+      res.cookie('jwtToken', token, { 
+        httpOnly: true, 
+        secure: isProduction, 
+        domain: 'localhost', 
+        path: '/' 
+      });
+      res.cookie('refreshToken', refreshToken, { 
+        httpOnly: true, 
+        secure: isProduction, 
+        domain: 'localhost', 
+        path: '/' 
+      });
 
-      res.json({ message: 'User authenticated', userDetails: payload });
+      res.json({ message: 'User authenticated', userDetails: payload, token });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
@@ -104,10 +133,21 @@ const authController = {
       const token = jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '1h' });
       const refreshToken = jwt.sign(jwtPayload, process.env.REFRESH_JWT_SECRET, { expiresIn: '7d' });
 
-      res.cookie('jwtToken', token, { httpOnly: true, secure: true, domain: 'localhost', path: '/' });
-      res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, domain: 'localhost', path: '/' });
+      const isProduction = process.env.NODE_ENV === 'production';
+      res.cookie('jwtToken', token, { 
+        httpOnly: true, 
+        secure: isProduction, 
+        domain: 'localhost', 
+        path: '/' 
+      });
+      res.cookie('refreshToken', refreshToken, { 
+        httpOnly: true, 
+        secure: isProduction, 
+        domain: 'localhost', 
+        path: '/' 
+      });
 
-      res.json({ message: 'Google user authenticated', userDetails: jwtPayload });
+      res.json({ message: 'Google user authenticated', userDetails: jwtPayload, token });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Google login failed' });
@@ -145,7 +185,12 @@ const authController = {
         { expiresIn: '1h' }
       );
 
-      res.cookie('jwtToken', newAccessToken, { httpOnly: true, secure: true, domain: 'localhost', path: '/' });
+      res.cookie('jwtToken', newAccessToken, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production', 
+        domain: 'localhost', 
+        path: '/' 
+      });
       res.json({ message: 'Token refreshed', userDetails: user });
     } catch (error) {
       console.error(error);

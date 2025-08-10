@@ -2,15 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
+const legalChatRoutes = require('./routes/legalChatRoutes');
 
-const { PORT, MONGO_URI } = require('./config/config');
+const { PORT, MONGO_URI, NODE_ENV } = require('./config/config');
 
 const cookieParser = require('cookie-parser');
 
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // or your frontend URL
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true
 };
 app.use(cors(corsOptions));
@@ -23,7 +24,8 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.log('MongoDB connection error:', err));
 
 app.use('/auth', authRoutes);
+app.use('/legal-chat', legalChatRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT} in ${NODE_ENV || 'development'} mode`);
 });
