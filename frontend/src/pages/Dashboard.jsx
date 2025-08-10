@@ -44,6 +44,26 @@ const Dashboard = () => {
               <p className="text-gray-600 mb-4">
                 Welcome to your LawPilot dashboard, {user?.name || 'User'}!
               </p>
+              
+              {/* Quick Actions */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">Quick Actions</h3>
+                <div className="flex flex-wrap gap-4">
+                  <button
+                    onClick={() => navigate('/legal-chat')}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                  >
+                    🤖 Start Legal Chat
+                  </button>
+                  <button
+                    onClick={() => navigate('/legal-chat')}
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                  >
+                    ⚖️ Ask Legal Question
+                  </button>
+                </div>
+              </div>
+              
               <div className="bg-white p-6 rounded-lg shadow-sm border">
                 <h3 className="text-lg font-medium text-gray-900 mb-3">User Information</h3>
                 <div className="space-y-2 text-sm text-gray-600">
