@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { serverEndpoint } from '../config';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        'http://localhost:5000/auth/register',
+        `${serverEndpoint}/auth/register`,
         formData,
         { withCredentials: true }
       );
@@ -85,9 +86,9 @@ const Register = () => {
         </form>
         <p className="text-sm text-center text-gray-600">
           Already have an account?{' '}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-blue-600 hover:underline">
             Login here
-          </a>
+          </Link>
         </p>
       </div>
     </div>

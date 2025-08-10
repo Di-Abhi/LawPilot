@@ -1,12 +1,35 @@
-# React + Vite
+# LawPilot Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Environment Variables
 
-Currently, two official plugins are available:
+Create a `.env` file in the frontend directory with the following variables:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```env
+# API Configuration
+VITE_API_URL=http://localhost:5000
 
-## Expanding the ESLint configuration
+# Google OAuth Configuration
+VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Setup Instructions
+
+1. Install dependencies: `npm install`
+2. Create `.env` file with required variables
+3. Start development server: `npm run dev`
+4. Build for production: `npm run build`
+
+## Features
+
+- User authentication (email/password)
+- Google OAuth integration
+- Responsive design with Tailwind CSS
+- Redux state management
+- React Router navigation
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint

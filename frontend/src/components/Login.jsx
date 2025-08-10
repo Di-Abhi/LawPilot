@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { serverEndpoint } from "../config";
+import { serverEndpoint, googleClientId } from "../config";
 import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/authSlice";
 
 function Login() {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ function Login() {
         formData,
         { withCredentials: true }
       );
-      dispatch({ type: "SET_USER", payload: res.data.userDetails });
+      dispatch(loginSuccess({ user: res.data.userDetails, token: res.data.token }));
       navigate("/dashboard");
     } catch (err) {
       setErrors({
@@ -52,7 +53,7 @@ function Login() {
         { idToken: authResponse.credential },
         { withCredentials: true }
       );
-      dispatch({ type: "SET_USER", payload: res.data.userDetails });
+      dispatch(loginSuccess({ user: res.data.userDetails, token: res.data.token }));
       navigate("/dashboard");
     } catch (err) {
       setErrors({ message: "Google login failed" });
@@ -118,7 +119,7 @@ function Login() {
         <div className="my-4 text-center text-gray-500 text-sm">OR</div>
 
         <div className="flex justify-center mb-4">
-          <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+          <GoogleOAuthProvider clientId={googleClientId}>
             <GoogleLogin
               onSuccess={handleGoogleSignin}
               onError={() => setErrors({ message: "Google Signin failed" })}
